@@ -1,0 +1,193 @@
+
+Q2)a
+create or replace procedure movieavailable 
+is 
+	movtitle mov_tape.title%type;
+	cursor mycursor is select title from movie_tape where rentedeout='No';
+begin
+
+
+  open mycursor;
+  
+     loop 
+	   fetch mycursor into v_title;
+	   exit when(mycursor%NOTFOUND);
+	   dbms_output.put_line('Movie available' || movtitle);
+	 end loop;
+   close mycursor;
+end ;
+execute MovieAvailable();
+
+
+--
+
+
+create or replace procedure customer_info
+is 
+ customer_id movie_customers.customers.customerID%type;
+ customer_initials movie_customers.customer_initials%type;
+ first_name movie_customers.FirstName%type;
+ last_name movie_customers.LastName%type;
+ phone_num movie_customers.PhoneNumber%type;
+ birth_date movie_customers.BirthDate%type;
+ driver_licence movie_customers.DriverLicence%type;
+ status_new movie_customers.Status%type;
+ creditcard_num movie_customers.CreditCardNumber%type;
+ title movie_tape.title%type;
+ 
+ cursor c1 is select c.customerid,c.customerinitails,c.firstname,c.lastname,c.phonenumber
+ c.birthdate,c.driverlicence,c.status,c.creditcardnumber,t.title from movie_customersc
+		inner join rental r on c.customerID=r.customerID
+		inner join movie_tape title 
+		on r.tapeid=t.tapeid;
+  counter number;
+  
+  
+  
+ begin 
+  
+  
+    open c1;
+	counter:=1;
+	dbms_output.put_line('Customer are:');
+	
+	   loop 
+	      fetch c1 into customer_id,customer_initials,first_name,last_name,phone_num,
+		  birth_date,driver_licence,status_new,creditcard_num,title;
+		  exit when (c1%notfound);
+		  
+		     dbms_output.put_line(counter || ':customer ID:' || customer_id4
+			 || 'customer initials:' ||customer_initials || 'first name :'||
+			 first_name|| 'Last Name:' ||last_name || 'phone number :'||
+			 phone_num|| 'birth date||birth_date || 'Driver Licence:'||
+			 driver_licence|| 'Status:' ||status_new || 'credit card number :'||
+			 creditcard_num|| 'renting movie:'|| title);
+			 counter:=counter+1;
+			 
+		end loop;
+		
+	 close c1;
+	 
+  end;
+  
+  execute customer_info();
+			 
+			 
+ ----d show names of customer and number of movie ........
+ 
+ create or replace procedure movie_renting
+ is
+ 
+    first_name movie_customers.firstName%type;
+	last_name movie_customers.lastname%type;
+	movie_counter number;
+	cursor c is select c.firstname,c.lastname,count(t.title) from movie_customers c1
+	inner join rental r 
+	on c.customerID=r.customerID
+    inner join movie_tape t
+	on r.tapeid=t.tapeid group by c.firstname,c.lastname;
+	
+   counter number;
+   
+ begin 
+ open c1;
+ counter:=1;
+ 
+   loop  
+   fetch c1 into first_name,last_name,movie_counter;
+   exit when c1%notfound;
+      dbms_output.put_line(counter|| ':First Name'|| first_name ||'Last Name:'
+	  || last_name || 'Number of movie rented' || movie_counter);
+     counter:=counter+1;
+	 
+	 end loop;
+	 close c1;
+end;
+execute movie_renting();
+
+
+
+
+
+
+
+---
+
+create or replace procedure moviecost
+is   
+
+   titleMax movie_tape.title%type;
+   costMax movie_tape.cost%type;
+   titleMin movie_tape.title%type;
+   costMin movie_tape.cost%type;
+   cursor a is select title ,cost from movie_tape where cost =
+   (select max(cost) from movie_tape);
+     cursor b is select title ,cost from movie_tape where cost =
+   (select min(cost) from movie_tape);
+   
+  begin 
+  
+  open a ;
+  
+  loop 
+	fetch a into titleMax,costMax;
+	exit when a%NOTFOUND;
+		dbms_output.put_line(titleMax||'cost'||costMax);
+  end loop;
+  dbms_output.put_line('');
+  close a;
+  open b ;
+  
+  loop 
+	fetch b into titleMin,costMin;
+	exit when b%NOTFOUND;
+		dbms_output.put_line(titleMin||'cost'||costMin);
+  end loop;
+  dbms_output.put_line('');
+  close b;
+  end;
+  /
+  
+   
+   
+   
+   
+   
+
+ 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
